@@ -4,6 +4,9 @@ const path = require('path');
 const util = require('util');
 const { notes } = require('./db/db.json');
 
+//helper method for generating unique IDs
+const uuid = require('./helpers/uuid');
+
 
 const PORT = process.env.port || 3001;
 
@@ -74,10 +77,11 @@ app.post('/api/notes', (req, res) => {
     const newNote = {
         title,
         text,
+        id: uuid(),
     };
 
     readAndAppend(newNote, './db/db.json');
-    res.json(`Note added successfully 🚀`);
+    res.json(`Note added successfully`);
     } else {
     res.error('Error in adding note');
     }

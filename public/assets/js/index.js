@@ -50,7 +50,7 @@ const deleteNote = (id) =>
     },
   });
 
-const renderActiveNote = () => {
+  const renderActiveNote = () => {
   hide(saveNoteBtn);
 
   if (activeNote.id) {
@@ -66,10 +66,16 @@ const renderActiveNote = () => {
   }
 };
 
+//creating method to create a random ID
+const randomId = () => {
+  Math.floor(Math.random() * 1000)
+};
+
 const handleNoteSave = () => {
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
+    id: randomId(),
   };
   saveNote(newNote).then(() => {
     getAndRenderNotes();
@@ -105,6 +111,7 @@ const handleNoteView = (e) => {
 // Sets the activeNote to and empty object and allows the user to enter a new note
 const handleNewNoteView = (e) => {
   activeNote = {};
+
   renderActiveNote();
 };
 
@@ -137,6 +144,7 @@ const renderNoteList = async (notes) => {
 
     liEl.append(spanEl);
 
+//delete event listener   
     if (delBtn) {
       const delBtnEl = document.createElement('i');
       delBtnEl.classList.add(
