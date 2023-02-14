@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { readFromFile, readAndAppend } = require('./Develop/helpers/fsUtils');
 const { notes } = require('./Develop/db/db.json');
 
 const PORT = process.env.port || 3001;
@@ -14,17 +15,49 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
-function createNewNote (body, notesAdd) {
-    const note = body; 
-    notesAdd.push(note); 
+// function createNote (body, notesAdd) {
+//     const note = body; 
+//     notesAdd.push(note); 
 
-    // path to write file 
-    fs.writeFileSync(
-        path.join(__dirname, './Develop/db/db.json'),
-        JSON.stringify({ notes : notesAdd }, null, 2)
-    );
-    return note; 
-};
+//     // path to write file 
+//     fs.writeFileSync(
+//         path.join(__dirname, './Develop/db/db.json'),
+//         JSON.stringify({ notes : notesAdd }, null, 2)
+//     );
+//     return note; 
+// };
+
+app.get('/notes', (req, res) => {
+    // res.json(notes); 
+    readFromFile('./Develop/db/db.json').then((data) => res.json(JSON.parse(data)));
+});
+
+app.post('/notes', (req, res) => {
+    console.log(req.body);
+
+    const  { title, text } = req.body;
+
+    if (req.body) {
+        const newNote = {
+            title,
+            text,
+        };
+
+        readAndAppend(newNote, './Develop/db/db.json');
+        res.json('Note successfully added');
+    } else {
+        res.errored('Error in adding note');
+    }
+})
+
+// app.post('/notes', (req, res) => {
+//     req.body.id = notes.length.toString(); 
+//     const note = createNote(req.body, notes); 
+
+//     res.json(note);
+//     }
+// );
+
 
 // GET Route for homepage
 app.get('/', (req, res) =>
