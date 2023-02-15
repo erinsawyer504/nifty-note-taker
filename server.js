@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
-const { notes } = require('./db/db.json');
+const notes = require('./db/db.json');
 
 //helper method for generating unique IDs
 const uuid = require('./helpers/uuid');
@@ -19,10 +19,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
-// GET Route for homepage
-app.get('/', (req, res) =>
-    res.sendFile(path.join(__dirname, '/public/index.html'))
-);
 
 // GET Route for notes page
 app.get('/notes', (req, res) =>
@@ -87,6 +83,34 @@ app.post('/api/notes', (req, res) => {
     }
 });
 
+// delete notes
+function deleteNote(id, parsedData) {
+    for (let i = 0; i< parsedData.length; i++){
+        let note = parsedData[i];
+
+        if (note.id == id) {
+            parsedData.splice(i, 1);
+            fs.writeFileSync(
+                path.join(__dirname, './db/db.json'),
+                JSON.stringify(parsedData, null, 2)
+            );
+            break;
+        }
+    }
+}
+
+app.delete('/api/notes/:id', (req, res) => {
+    deleteNote(req.params.id, notes);
+    res.json(true);
+    console.log(parsedData);
+});
+
+
+
+// GET Route for homepage
+app.get('/*', (req, res) =>
+    res.sendFile(path.join(__dirname, '/public/index.html'))
+);
 
 app.listen(PORT, () =>
     console.log(`App listening at http://localhost:${PORT} 🚀`)

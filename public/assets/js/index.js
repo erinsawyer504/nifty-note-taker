@@ -66,16 +66,10 @@ const deleteNote = (id) =>
   }
 };
 
-//creating method to create a random ID
-const randomId = () => {
-  Math.floor(Math.random() * 1000)
-};
-
 const handleNoteSave = () => {
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
-    id: randomId(),
   };
   saveNote(newNote).then(() => {
     getAndRenderNotes();
