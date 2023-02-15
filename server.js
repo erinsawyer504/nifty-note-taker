@@ -85,24 +85,37 @@ app.post('/api/notes', (req, res) => {
 
 // delete notes
 function deleteNote(id, parsedData) {
+    console.log(parsedData);
     for (let i = 0; i< parsedData.length; i++){
         let note = parsedData[i];
 
         if (note.id == id) {
             parsedData.splice(i, 1);
-            fs.writeFileSync(
-                path.join(__dirname, './db/db.json'),
-                JSON.stringify(parsedData, null, 2)
-            );
+            console.log(parsedData);
+
+
             break;
         }
     }
+return parsedData;
 }
 
+const readAndDelete = (id, file) => {
+    fs.readFile(file, 'utf8', (err, data) => {
+        if (err) {
+        console.error(err);
+    } else {
+        let parsedData = JSON.parse(data);
+        parsedData = deleteNote(id, parsedData);
+        writeToFile(file, parsedData);
+    }
+});
+};
+
+
 app.delete('/api/notes/:id', (req, res) => {
-    deleteNote(req.params.id, notes);
+    readAndDelete(req.params.id, './db/db.json');
     res.json(true);
-    console.log(parsedData);
 });
 
 
