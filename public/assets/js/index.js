@@ -50,7 +50,7 @@ const deleteNote = (id) =>
     },
   });
 
-const renderActiveNote = () => {
+  const renderActiveNote = () => {
   hide(saveNoteBtn);
 
   if (activeNote.id) {
@@ -105,6 +105,7 @@ const handleNoteView = (e) => {
 // Sets the activeNote to and empty object and allows the user to enter a new note
 const handleNewNoteView = (e) => {
   activeNote = {};
+
   renderActiveNote();
 };
 
@@ -137,6 +138,7 @@ const renderNoteList = async (notes) => {
 
     liEl.append(spanEl);
 
+//delete event listener   
     if (delBtn) {
       const delBtnEl = document.createElement('i');
       delBtnEl.classList.add(
